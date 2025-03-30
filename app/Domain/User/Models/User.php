@@ -63,7 +63,7 @@ class User extends Authenticatable
         return new Attribute(
             function () {
                 if ($this->profile_photo) {
-                    return Storage::url($this->profile_photo);
+                    return Storage::disk('public')->url($this->profile_photo);
                 }
 
                 return "https://ui-avatars.com/api/?name={$this->name}&color=000000&background=#ffa14c";

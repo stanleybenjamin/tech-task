@@ -102,7 +102,7 @@ class UserService
 
 
     /**
-     * 
+     *
      * @param \App\Domain\User\Models\User $user
      * @param string $password
      * @return bool
@@ -110,5 +110,29 @@ class UserService
     public function updatePassword(User $user, string $password): bool
     {
         return $this->repository->update($user, ['password' => $password]);
+    }
+
+
+    /**
+     * 
+     * @param \App\Domain\User\Models\User $user
+     * @param \Illuminate\Http\UploadedFile $selfie
+     * @return bool
+     */
+    public function updateSelfie(User $user, UploadedFile $selfie): bool
+    {
+        if (!$this->deleteProfilePhoto($user)) {
+            return false;
+        };
+
+        $photo = $this->uploadProfilePhoto($selfie);
+
+        if (!$photo) {
+            return false;
+        }
+
+        return $this->repository->update($user, [
+            'profile_photo' => $photo
+        ]);
     }
 }

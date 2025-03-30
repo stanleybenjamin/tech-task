@@ -124,12 +124,37 @@ class UserController extends Controller
         ]);
 
         if (!$this->service->updatePassword($user, $data['password'])) {
-            return apiError([], 'User password not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return apiError([], 'User password could not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return apiSuccess(
             UserResource::make($user->refresh()),
             'User password updated successfully.',
+            Response::HTTP_ACCEPTED
+        );
+    }
+
+    /**
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Domain\User\Models\User $user
+     * @return JsonResponse
+     */
+    public function updateSelfie(Request $request, User $user): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        $data = $request->validate([
+            'selfie' => 'required|image|max:1024|mimes:jpeg,jpg,png,gif,webp'
+        ]);
+
+        if (!$this->service->updateSelfie($user, $data['selfie'])) {
+            return apiError([], 'User selfie could not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return apiSuccess(
+            UserResource::make($user->refresh()),
+            'User selfie updated successfully.',
             Response::HTTP_ACCEPTED
         );
     }

@@ -6,6 +6,8 @@ use Tests\TestCase;
 use App\Domain\User\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Passport;
 
 class UpdateUserTest extends TestCase
@@ -73,10 +75,29 @@ class UpdateUserTest extends TestCase
 
         Passport::actingAs($admin);
 
-        $this->putJson(route('users.update', $user), [
+        $this->putJson(route('users.update-password', $user), [
             'password' => 'password',
             'password_confirmation' => 'password'
         ])
             ->assertAccepted();
+    }
+
+    public function test_admin_can_update_a_users_selfie(): void
+    {
+        $user = User::factory()->create(['profile_photo' => null]);
+        $admin = User::factory()->admin()->create();
+
+        Storage::fake('public');
+
+        Passport::actingAs($admin);
+
+        $this->putJson(route('users.update-selfie', $user), [
+            'selfie' => UploadedFile::fake()->image('selfie.png', 520, 520)
+        ])
+            ->assertAccepted();
+
+        $this->assertNotNull($user->refresh()->profile_photo);
+
+        Storage::disk('public')->assertCount('profile-photos', 1);
     }
 }
