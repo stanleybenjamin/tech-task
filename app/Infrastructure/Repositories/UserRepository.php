@@ -20,9 +20,25 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
+    /**
+     *
+     * @param int $per_page
+     * @return LengthAwarePaginator
+     */
     public function paginate(int $per_page): LengthAwarePaginator
     {
         return User::orderByDesc('created_at')
             ->paginate($per_page);
+    }
+
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @return bool|null
+     */
+    public function delete(User $user): ?bool
+    {
+        return $user->delete();
     }
 }

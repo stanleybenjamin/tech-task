@@ -18,7 +18,14 @@ interface UserRepositoryInterface
     /**
      *
      * @param int $per_page
-     * @return void
+     * @return LengthAwarePaginator
      */
     public function paginate(int $per_page): LengthAwarePaginator;
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @return bool
+     */
+    public function delete(User $user): ?bool;
 }

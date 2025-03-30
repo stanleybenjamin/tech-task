@@ -11,11 +11,12 @@ use App\Presentation\Http\Shared\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    public function __construct(public UserRepositoryInterface $repository){}
+    public function __construct(private UserService $service){}
 
     public function index(Request $request): JsonResponse
     {
@@ -23,7 +24,7 @@ class UserController extends Controller
 
         $per_page = $request->get('per_page', 20);
 
-        $users = $this->repository->paginate($per_page);
+        $users = $this->service->paginated($per_page);
 
         return apiSuccess(
             UserResource::collection($users),
@@ -42,8 +43,7 @@ class UserController extends Controller
 
         $dto = CreateUserDTO::validateAndCreate($request->toArray());
 
-        $user = (new UserService($this->repository))
-            ->createUser($dto);
+        $user = $this->service->createUser($dto);
 
         return apiSuccess(
             UserResource::make($user),
@@ -65,5 +65,17 @@ class UserController extends Controller
             UserResource::make($user),
             'User retrieved successfully'
         );
+    }
+
+    public function destroy(User $user): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        if(!$this->service->deleteUser($user)) {
+            return apiError([], 'User could not be deleted.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return apiSuccess(code: Response::HTTP_NO_CONTENT);
+
     }
 }
