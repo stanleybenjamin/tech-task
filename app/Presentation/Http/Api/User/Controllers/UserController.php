@@ -38,5 +38,13 @@ class UserController extends Controller
         );
     }
 
-    
+    public function show(User $user): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        return apiSuccess(
+            UserResource::make($user),
+            'User retrieved successfully'
+        );
+    }
 }

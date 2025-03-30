@@ -31,7 +31,7 @@ class CreateUserDTO extends Data
             'name' => 'required|string|max:64',
             'surname' => 'required|string|max:64',
             'email' => 'required|email|max:255|unique:users',
-            'phone' => 'required|string|min:8|max:16',
+            'phone' => 'required|string|min:8|max:20',
             'country' => 'required|string|in:' . implode(',', $countries),
             'gender' => 'required|string|in:male,female',
             'selfie' => 'nullable|image|max:1024|mimes:jpeg,jpg,png,gif,webp',
