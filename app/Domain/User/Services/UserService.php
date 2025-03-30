@@ -114,7 +114,7 @@ class UserService
 
 
     /**
-     * 
+     *
      * @param \App\Domain\User\Models\User $user
      * @param \Illuminate\Http\UploadedFile $selfie
      * @return bool
@@ -134,5 +134,16 @@ class UserService
         return $this->repository->update($user, [
             'profile_photo' => $photo
         ]);
+    }
+
+
+    /**
+     * 
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return $this->repository->findByEmail($email);
     }
 }

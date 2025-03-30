@@ -53,4 +53,14 @@ class UserRepository implements UserRepositoryInterface
     {
         return $user->update($data);
     }
+
+    /**
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User
+    {
+        return User::findByEmail($email);
+    }
 }

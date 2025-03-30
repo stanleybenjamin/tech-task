@@ -70,4 +70,14 @@ class User extends Authenticatable
             }
         );
     }
+
+    /**
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public static function findByEmail(string $email): ?User
+    {
+        return static::where('email', $email)->first();
+    }
 }

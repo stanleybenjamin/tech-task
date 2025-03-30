@@ -36,4 +36,11 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function update(User $user, array $data): bool;
+
+    /**
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): ?User;
 }

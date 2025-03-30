@@ -1,11 +1,19 @@
 <?php
 
+use App\Presentation\Http\Api\Shared\AuthController;
 use App\Presentation\Http\Api\Shared\CountryController;
 use App\Presentation\Http\Api\User\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/countries', [CountryController::class, 'index'])
     ->name('countries.index');
+
+Route::middleware('guest:api')
+    ->group(function () {
+        Route::post('/login', [AuthController::class, 'login'])
+            ->middleware('throttle:6,1')
+            ->name('login');
+    });
 
 Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('/users', UserController::class);
