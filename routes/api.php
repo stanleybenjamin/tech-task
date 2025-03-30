@@ -16,6 +16,8 @@ Route::middleware('guest:api')
     });
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
     Route::apiResource('/users', UserController::class);
     Route::prefix('users')
         ->as('users.')

@@ -36,5 +36,18 @@ class AuthTest extends TestCase
                     'token'
                 ]
             ]);
+
+        $this->assertGuest('api');
+    }
+
+
+    public function guest_user_cannot_log_out(): void
+    {
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $this->postJson(route('logout'))
+            ->assertOk();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Presentation\Http\Api\Shared;
 
 use Illuminate\Http\Request;
+use App\Domain\User\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use App\Domain\User\Services\UserService;
@@ -43,5 +44,16 @@ class AuthController extends Controller
             'user' => UserResource::make($user),
             'token' => $token
         ]);
+    }
+
+
+    public function logout(Request $request): JsonResponse
+    {
+        /** @var User */
+        $user = $request->user();
+
+        $user->token()->revoke();
+
+        return apiSuccess([], 'You have been successfully logged out.');
     }
 }
