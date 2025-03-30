@@ -5,14 +5,13 @@ namespace App\Presentation\Http\Api\User\Controllers;
 use App\Application\User\DTOs\CreateUserDTO;
 use App\Application\User\DTOs\UpdateUserDTO;
 use App\Domain\User\Models\User;
-use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Services\UserService;
 use App\Presentation\Http\Resources\User\UserResource;
 use App\Presentation\Http\Shared\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -88,7 +87,7 @@ class UserController extends Controller
 
 
     /**
-     * 
+     *
      * @param \App\Domain\User\Models\User $user
      * @param \Illuminate\Http\Request $request
      * @return JsonResponse
@@ -106,6 +105,31 @@ class UserController extends Controller
         return apiSuccess(
             UserResource::make($user->refresh()),
             'User updated successfully.',
+            Response::HTTP_ACCEPTED
+        );
+    }
+
+
+    public function updatePassword(Request $request, User $user): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        $data = $request->validate([
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                Password::defaults()
+            ]
+        ]);
+
+        if (!$this->service->updatePassword($user, $data['password'])) {
+            return apiError([], 'User password not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return apiSuccess(
+            UserResource::make($user->refresh()),
+            'User password updated successfully.',
             Response::HTTP_ACCEPTED
         );
     }

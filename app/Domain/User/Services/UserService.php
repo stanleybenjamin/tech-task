@@ -99,4 +99,16 @@ class UserService
     {
         return $this->repository->update($user, $data->toArray());
     }
+
+
+    /**
+     * 
+     * @param \App\Domain\User\Models\User $user
+     * @param string $password
+     * @return bool
+     */
+    public function updatePassword(User $user, string $password): bool
+    {
+        return $this->repository->update($user, ['password' => $password]);
+    }
 }

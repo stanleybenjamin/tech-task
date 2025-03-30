@@ -39,7 +39,7 @@ class UpdateUserTest extends TestCase
         Passport::actingAs($admin);
 
         $this->putJson(route('users.update', $user), [
-            // 'name' => 'Jane',
+            'name' => 'Jane',
             'surname' => 'Doe',
             'email' => 'janedoe@gmail.com',
             'gender' => 'female',
@@ -48,7 +48,7 @@ class UpdateUserTest extends TestCase
             ->assertAccepted()
             ->assertJson([
                 'data' => [
-                    // 'name' => 'Jane',
+                    'name' => 'Jane',
                     'surname' => 'Doe',
                     'email' => 'janedoe@gmail.com',
                     'gender' => 'female',
@@ -57,11 +57,26 @@ class UpdateUserTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('users', [
-            // 'name' => 'Jane',
+            'name' => 'Jane',
             'surname' => 'Doe',
             'email' => 'janedoe@gmail.com',
             'gender' => 'female',
             'country' => 'Italy'
         ]);
+    }
+
+
+    public function test_admin_can_update_a_users_password(): void
+    {
+        $user = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+
+        Passport::actingAs($admin);
+
+        $this->putJson(route('users.update', $user), [
+            'password' => 'password',
+            'password_confirmation' => 'password'
+        ])
+            ->assertAccepted();
     }
 }
