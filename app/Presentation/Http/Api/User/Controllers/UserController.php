@@ -3,6 +3,7 @@
 namespace App\Presentation\Http\Api\User\Controllers;
 
 use App\Application\User\DTOs\CreateUserDTO;
+use App\Application\User\DTOs\UpdateUserDTO;
 use App\Domain\User\Models\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use App\Domain\User\Services\UserService;
@@ -67,6 +68,12 @@ class UserController extends Controller
         );
     }
 
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @return JsonResponse
+     */
     public function destroy(User $user): JsonResponse
     {
         Gate::authorize('admin');
@@ -77,5 +84,29 @@ class UserController extends Controller
 
         return apiSuccess(code: Response::HTTP_NO_CONTENT);
 
+    }
+
+
+    /**
+     * 
+     * @param \App\Domain\User\Models\User $user
+     * @param \Illuminate\Http\Request $request
+     * @return JsonResponse
+     */
+    public function update(User $user, Request $request): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        $data = UpdateUserDTO::validateAndCreate($request->all());
+
+        if (!$this->service->update($user, $data)) {
+            return apiError([], 'User could not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return apiSuccess(
+            UserResource::make($user->refresh()),
+            'User updated successfully.',
+            Response::HTTP_ACCEPTED
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Domain\User\Services;
 
 use App\Application\User\DTOs\CreateUserDTO;
+use App\Application\User\DTOs\UpdateUserDTO;
 use App\Domain\User\Models\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use Illuminate\Http\UploadedFile;
@@ -86,5 +87,16 @@ class UserService
         }
 
         return Storage::disk('public')->delete($user->profile_photo);
+    }
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @param \App\Application\User\DTOs\UpdateUserDTO $data
+     * @return bool
+     */
+    public function update(User $user, UpdateUserDTO $data): bool
+    {
+        return $this->repository->update($user, $data->toArray());
     }
 }

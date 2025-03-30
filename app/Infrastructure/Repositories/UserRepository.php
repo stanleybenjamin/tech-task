@@ -41,4 +41,16 @@ class UserRepository implements UserRepositoryInterface
     {
         return $user->delete();
     }
+
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @param array $data
+     * @return bool
+     */
+    public function update(User $user, array $data): bool
+    {
+        return $user->update($data);
+    }
 }

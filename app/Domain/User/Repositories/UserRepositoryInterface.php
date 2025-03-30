@@ -28,4 +28,12 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function delete(User $user): ?bool;
+
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @param array $data
+     * @return bool
+     */
+    public function update(User $user, array $data): bool;
 }
