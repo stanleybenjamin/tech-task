@@ -3,9 +3,12 @@
 namespace App\Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -53,5 +56,18 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'bool'
         ];
+    }
+
+    public function selfie(): Attribute
+    {
+        return new Attribute(
+            function () {
+                if ($this->profile_photo) {
+                    return Storage::url($this->profile_photo);
+                }
+
+                return "https://ui-avatars.com/api/?name={$this->name}&color=000000&background=#ffa14c";
+            }
+        );
     }
 }

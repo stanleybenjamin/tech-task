@@ -17,6 +17,20 @@ class UserController extends Controller
 {
     public function __construct(public UserRepositoryInterface $repository){}
 
+    public function index(Request $request): JsonResponse
+    {
+        Gate::authorize('admin');
+
+        $per_page = $request->get('per_page', 20);
+
+        $users = $this->repository->paginate($per_page);
+
+        return apiSuccess(
+            UserResource::collection($users),
+            "Users successfully retrieved."
+        );
+    }
+
     /**
      *
      * @param \Illuminate\Http\Request $request
@@ -38,6 +52,11 @@ class UserController extends Controller
         );
     }
 
+    /**
+     *
+     * @param \App\Domain\User\Models\User $user
+     * @return JsonResponse
+     */
     public function show(User $user): JsonResponse
     {
         Gate::authorize('admin');
