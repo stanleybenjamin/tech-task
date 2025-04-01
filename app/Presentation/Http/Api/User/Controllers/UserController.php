@@ -148,7 +148,7 @@ class UserController extends Controller
             'selfie' => 'required|image|max:1024|mimes:jpeg,jpg,png,gif,webp'
         ]);
 
-        if (!$this->service->updateSelfie($user, $data['selfie'])) {
+        if (!$this->service->updateSelfie($user, $request->file('selfie'))) {
             return apiError([], 'User selfie could not be updated.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

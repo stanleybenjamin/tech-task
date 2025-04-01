@@ -26,7 +26,7 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('/{user}/update-password', 'updatePassword')
                 ->name('update-password');
 
-            Route::put('/{user}/update-selfie', 'updateSelfie')
+            Route::post('/{user}/update-selfie', 'updateSelfie')
                 ->name('update-selfie');
         });
 });

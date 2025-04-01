@@ -91,7 +91,7 @@ class UpdateUserTest extends TestCase
 
         Passport::actingAs($admin);
 
-        $this->putJson(route('users.update-selfie', $user), [
+        $this->postJson(route('users.update-selfie', $user), [
             'selfie' => UploadedFile::fake()->image('selfie.png', 520, 520)
         ])
             ->assertAccepted();
