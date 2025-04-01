@@ -53,12 +53,10 @@
     PERSONAL_ACCESS_CLIENT_SECRET=your_client_secret
     ```
   - Use the following Postman link:
-    ```
-    [Insert Postman Link Here]
-    ```
+    [Click here for Postman documentation](https://documenter.getpostman.com/view/12444452/2sB2cRD4nN)
   
   - **Admin Credentials:**
     ```
     Username: example@email.com
     Password: password
-    ```
+    
